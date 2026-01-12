@@ -1,12 +1,12 @@
 # DLT Medallion Architecture Pipeline
 
-This pipeline implements an end-to-end **Medallion Architecture** using Databricks Delta Live Tables (DLT), demonstrating a complete data engineering workflow from raw data ingestion to business-ready analytics.
+This repository contains an end-to-end **Medallion Architecture** pipeline implementation using Databricks Delta Live Tables (DLT), demonstrating a complete data engineering workflow from raw data ingestion to business-ready analytics.
 
 ## Architecture Overview
 
 This pipeline follows the **Bronze → Silver → Gold** medallion architecture pattern:
 
-### 🥉 Bronze Layer (`transformations/bronze/`)
+### 🥉 Bronze Layer (`DLT_Pipelines/transformations/bronze/`)
 **Purpose**: Raw data ingestion with initial data quality checks
 
 - **`customers_ingest.py`**: Ingests customer data from source with validation rules
@@ -22,7 +22,7 @@ This pipeline follows the **Bronze → Silver → Gold** medallion architecture 
   - Uses `append_flow` to merge data from multiple source streams
   - Creates: `sales_stg` table
 
-### 🥈 Silver Layer (`transformations/silver/`)
+### 🥈 Silver Layer (`DLT_Pipelines/transformations/silver/`)
 **Purpose**: Cleaned, enriched, and standardized data with Change Data Capture (CDC)
 
 - **`customers_transform.py`**: Transforms customer data
@@ -40,7 +40,7 @@ This pipeline follows the **Bronze → Silver → Gold** medallion architecture 
   - CDC: Uses SCD Type 1 (overwrites) with `sales_id` as key
   - Creates: `sales_enr` table
 
-### 🥇 Gold Layer (`transformations/gold/`)
+### 🥇 Gold Layer (`DLT_Pipelines/transformations/gold/`)
 **Purpose**: Business-level aggregated data in a star schema design
 
 **Dimension Tables** (SCD Type 2 - tracks historical changes):
@@ -82,14 +82,16 @@ Business Analytics
 ## Project Structure
 
 ```
-DLT_Pipelines/
-├── transformations/
-│   ├── bronze/          # Raw data ingestion
-│   ├── silver/           # Cleaned and enriched data
-│   ├── gold/             # Business-ready analytics
-│   └── demo/              # Example/demo transformations
-├── utilities/             # Utility functions (e.g., email validation)
-└── explorations/          # Ad-hoc notebooks for data exploration
+dlt_declarative_pipeline/
+├── DLT_Pipelines/
+│   ├── transformations/
+│   │   ├── bronze/          # Raw data ingestion
+│   │   ├── silver/           # Cleaned and enriched data
+│   │   ├── gold/             # Business-ready analytics
+│   │   └── demo/             # Example/demo transformations
+│   ├── utilities/            # Utility functions (e.g., email validation)
+│   └── explorations/         # Ad-hoc notebooks for data exploration
+└── source_data_load.sql.dbquery.ipynb  # Source data loading notebook
 ```
 
 ## Getting Started
@@ -102,14 +104,14 @@ DLT_Pipelines/
 
 ### Development
 
-- Each dataset is defined in a separate file under `transformations`
+- Each dataset is defined in a separate file under `DLT_Pipelines/transformations`
 - Read more about DLT syntax at https://docs.databricks.com/ldp/developer/python-ref
 - Use `+ Add` in the file browser to add new dataset definitions
-- Explore the demo files in `transformations/demo/` for additional examples
+- Explore the demo files in `DLT_Pipelines/transformations/demo/` for additional examples
 
 ### Data Exploration
 
-- Use notebooks in the `explorations/` folder to analyze pipeline outputs
+- Use notebooks in the `DLT_Pipelines/explorations/` folder to analyze pipeline outputs
 - These notebooks are not executed as part of the pipeline
 - Make sure to run the pipeline first to materialize the datasets
 
